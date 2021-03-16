@@ -24,11 +24,13 @@ class Sudoku_Solver_question {
 
     public static boolean BFS(char[][] board) {
         // TODO write BFS search algorithm 
+        return false;
 
     }
 
     public static boolean DFS(char[][] board) {
         // TODO write DFS search algorithm
+        return false;
 
     }
 
@@ -134,7 +136,11 @@ class Sudoku_Solver_question {
     public static void print_matrix(char[][] board){
         int type = board.length;
         for(int i = 0; i<type;i++){
+            if (i % (type/3) == 0 && i > 0) 
+                System.out.println("");
             for(int j=0;j<type;j++){
+                if (j % 3 == 0 && j > 0) 
+                    System.out.print("  ");
                 System.out.print(board[i][j]+" ");
             }
             System.out.println(" ");
@@ -146,12 +152,15 @@ class Sudoku_Solver_question {
      */
     public static void main(String args[]){
         // 6x6 sudoku board
-        char[][] board_6x6 = {{'.','.','.','.','4','.'},
-                {'5','6','.','.','.','.'},
-                {'3','.','2','6','5','4'},
-                {'.','4','.','2','.','3'},
-                {'4','.','.','.','6','5'},
-                {'1','5','6','.','.','.'}};
+        char[][] board_6x6 = {
+                {'.','.','.', '.','4','.'},
+                {'5','6','.', '.','.','.'},
+
+                {'3','.','2', '6','5','4'},
+                {'.','4','.', '2','.','3'},
+
+                {'4','.','.', '.','6','5'},
+                {'1','5','6', '.','.','.'}};
 
         // type holds the length of the board
         type = board_6x6.length;
@@ -182,15 +191,18 @@ class Sudoku_Solver_question {
 
 
 
-        char[][] board_9x9 = {{'.','.','.','8','4','.','6','5','.'},
-                {'.','8','.','.','.','.','.','.','9'},
-                {'.','.','.','.','.','5','2','.','1'},
-                {'.','3','4','.','7','.','5','.','6'},
-                {'.','6','.','2','5','1','.','3','.'},
-                {'5','.','9','.','6','.','7','2','.'},
-                {'1','.','8','5','.','.','.','.','.'},
-                {'6','.','.','.','.','.','.','4','.'},
-                {'.','5','2','.','8','6','.','.','.'}};
+        char[][] board_9x9 = {
+                {'.','.','.', '8','4','.', '6','5','.'},
+                {'.','8','.', '.','.','.', '.','.','9'},
+                {'.','.','.', '.','.','5', '2','.','1'},
+
+                {'.','3','4', '.','7','.', '5','.','6'},
+                {'.','6','.', '2','5','1', '.','3','.'},
+                {'5','.','9', '.','6','.', '7','2','.'},
+                
+                {'1','.','8', '5','.','.', '.','.','.'},
+                {'6','.','.', '.','.','.', '.','4','.'},
+                {'.','5','2', '.','8','6', '.','.','.'}};
 
         // type holds the length of the board
         type = board_9x9.length;
