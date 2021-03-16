@@ -1,6 +1,7 @@
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+
 import org.fusesource.jansi.AnsiConsole;
 import static org.fusesource.jansi.Ansi.*;
 import static org.fusesource.jansi.Ansi.Color.*;
@@ -28,8 +29,37 @@ class Sudoku_Solver_question {
 
     public static boolean BFS(char[][] board) {
         // TODO write BFS search algorithm 
+        //for (int i = 0; i < board.length * board.length; i++) {
+        //    print_matrix_color(board, orig, i);
+        //    sleep(300);
+        //}
+        
+        
+        // now this is still wrong because it's a 'char' array, and 1 is an integer.. 
+        //but '1' is a char. Actually funnily enough 1 is a char too but it's wrong
+        
+        // check if the top/left number is valid.
+        for (int num = 1; num <= 9; num++) {
+            board[0][0] = intToChar(num); // assign a new value to the [0][0] spot of the 2d array
+            if (isValidSquare(board, 0) == true && isValidColumn(board, 0) == true && isValidRow(board, 0) == true) {
+                System.out.println("ayyy valid!");
+            } else {
+                System.out.println("not valid");
+            }
+            sleep(600);
+        }
+
         return false;
 
+    }
+
+    /**
+     * Converts a number eg 1 or 9 to a char eg '1', '9'
+     * @param num number to convert
+     * @return the char
+     */
+    public static char intToChar(int num) {
+        return (char)(48+num);
     }
 
     public static boolean DFS(char[][] board) {
@@ -87,6 +117,8 @@ class Sudoku_Solver_question {
         boolean[] isPresent = new boolean[board.length+1];
         for (int r = (s / 3) * height; r < ((s / 3) + 1) * height; r++) {
             for (int c = (s % 3) * height; c < ((s % 3) + 1) * height; c++) {
+                print_matrix_color(board, orig, r, c); // remove me later
+                sleep(150); // remove me later
                 char value = board[r][c];
                 if (value == '.') {
                     continue;
@@ -109,6 +141,8 @@ class Sudoku_Solver_question {
     private static boolean isValidColumn(char[][] board, int c) {
         boolean[] isPresent = new boolean[board.length+1];
         for (int i = 0; i < board.length; i++) {
+            print_matrix_color(board, orig, i, c); // remove me later
+            sleep(150); // remove me later
             char value = board[i][c];
             if (value == '.') {
                 continue;
@@ -130,6 +164,8 @@ class Sudoku_Solver_question {
     private static boolean isValidRow(char[][] board, int r) {
         boolean[] isPresent = new boolean[board.length+1];
         for (int i = 0; i < board.length; i++) {
+            print_matrix_color(board, orig, r, i); // remove me later
+            sleep(150); // remove me later
             char value = board[r][i];
             if (value == '.') {
                 continue;
@@ -183,6 +219,28 @@ class Sudoku_Solver_question {
             System.out.print("\n");
         }
     }
+    public static void print_matrix_color(char[][] board, char[][] orig, int row, int col){
+        int type = board.length;
+        System.out.print(ansi().eraseScreen());
+        for(int i = 0; i<type;i++){
+            if (i % (type/3) == 0 && i > 0) 
+                System.out.print("\n");
+            for(int j=0;j<type;j++){
+                if (j % 3 == 0 && j > 0) 
+                    System.out.print("  ");
+                Color bgColor = Color.DEFAULT;
+                if (i == row && j == col) {
+                    bgColor = Color.CYAN;
+                }
+                if (orig[i][j] == '.') {
+                    System.out.print(ansi().fg(RED).bg(bgColor).a(board[i][j]).bgDefault().fgDefault().a(" "));
+                } else {
+                    System.out.print(ansi().fgDefault().bg(bgColor).a(board[i][j]).bgDefault().fgDefault().a(" "));
+                }
+            }
+            System.out.print("\n");
+        }
+    }
 
     /**
      * Start of the program main function
@@ -209,7 +267,8 @@ class Sudoku_Solver_question {
         System.out.println("Problem board is: ");
         print_matrix(board_6x6);
         // Solve the problem board using BFS
-        boolean status = BFS(board_6x6);
+        //boolean status = BFS(board_6x6); // todo: uncomment
+        boolean status = false;
         // based on the status print the solution
         if(status){
             System.out.println("\n BFS - Solution board is: ");
@@ -249,7 +308,7 @@ class Sudoku_Solver_question {
         height = board_9x9.length/3;
         orig = new char[board_9x9.length][board_9x9[0].length];
         copyIntoBoard(board_9x9, orig);
-
+        
         // prints the problem board
         System.out.println("Problem board is: ");
         print_matrix(board_9x9);
