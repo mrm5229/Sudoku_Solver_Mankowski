@@ -1,10 +1,14 @@
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+import org.fusesource.jansi.AnsiConsole;
+import static org.fusesource.jansi.Ansi.*;
+import static org.fusesource.jansi.Ansi.Color.*;
 
 class Sudoku_Solver_question {
     public static int type = 0;
     public static int height = 0;
+    public static char[][] orig;
     // Node exploration holds the sudoku board in every iteration
     private static class Exploration {
         char[][] board;
@@ -34,6 +38,17 @@ class Sudoku_Solver_question {
 
     }
 
+    /**
+     * Wraps the Thread.sleep to include a try/catch for convenience
+     * parameter: sleep time in miliseconds
+     */
+    private static void sleep(int ms) { 
+        try {
+            Thread.sleep(ms);
+        } catch (Exception e) {
+
+        }
+    }
     /**
      * parameter: index
      * return: index
@@ -146,11 +161,34 @@ class Sudoku_Solver_question {
             System.out.println(" ");
         }
     }
+    public static void print_matrix_color(char[][] board, char[][] orig, int index){
+        int type = board.length;
+        System.out.print(ansi().eraseScreen());
+        for(int i = 0; i<type;i++){
+            if (i % (type/3) == 0 && i > 0) 
+                System.out.print("\n");
+            for(int j=0;j<type;j++){
+                if (j % 3 == 0 && j > 0) 
+                    System.out.print("  ");
+                Color bgColor = Color.DEFAULT;
+                if (i == getRowForIndex(index) && j == getColumnForIndex(index)) {
+                    bgColor = YELLOW;
+                }
+                if (orig[i][j] == '.') {
+                    System.out.print(ansi().fg(RED).bg(bgColor).a(board[i][j]).bgDefault().fgDefault().a(" "));
+                } else {
+                    System.out.print(ansi().fgDefault().bg(bgColor).a(board[i][j]).bgDefault().fgDefault().a(" "));
+                }
+            }
+            System.out.print("\n");
+        }
+    }
 
     /**
      * Start of the program main function
      */
     public static void main(String args[]){
+        AnsiConsole.systemInstall();
         // 6x6 sudoku board
         char[][] board_6x6 = {
                 {'.','.','.', '.','4','.'},
@@ -161,7 +199,8 @@ class Sudoku_Solver_question {
 
                 {'4','.','.', '.','6','5'},
                 {'1','5','6', '.','.','.'}};
-
+        orig = new char[board_6x6.length][board_6x6[0].length];
+        copyIntoBoard(board_6x6, orig);
         // type holds the length of the board
         type = board_6x6.length;
         // height holds the height of each box in the board
@@ -192,22 +231,24 @@ class Sudoku_Solver_question {
 
 
         char[][] board_9x9 = {
-                {'.','.','.', '8','4','.', '6','5','.'},
-                {'.','8','.', '.','.','.', '.','.','9'},
-                {'.','.','.', '.','.','5', '2','.','1'},
+            {'.','.','.', '8','4','.', '6','5','.'},
+            {'.','8','.', '.','.','.', '.','.','9'},
+            {'.','.','.', '.','.','5', '2','.','1'},
 
-                {'.','3','4', '.','7','.', '5','.','6'},
-                {'.','6','.', '2','5','1', '.','3','.'},
-                {'5','.','9', '.','6','.', '7','2','.'},
-                
-                {'1','.','8', '5','.','.', '.','.','.'},
-                {'6','.','.', '.','.','.', '.','4','.'},
-                {'.','5','2', '.','8','6', '.','.','.'}};
+            {'.','3','4', '.','7','.', '5','.','6'},
+            {'.','6','.', '2','5','1', '.','3','.'},
+            {'5','.','9', '.','6','.', '7','2','.'},
+            
+            {'1','.','8', '5','.','.', '.','.','.'},
+            {'6','.','.', '.','.','.', '.','4','.'},
+            {'.','5','2', '.','8','6', '.','.','.'}};
 
         // type holds the length of the board
         type = board_9x9.length;
         // height holds the height of each box in the board
         height = board_9x9.length/3;
+        orig = new char[board_9x9.length][board_9x9[0].length];
+        copyIntoBoard(board_9x9, orig);
 
         // prints the problem board
         System.out.println("Problem board is: ");
