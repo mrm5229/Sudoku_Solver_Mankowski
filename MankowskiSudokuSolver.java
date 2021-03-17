@@ -117,8 +117,7 @@ class Sudoku_Solver_question {
         boolean[] isPresent = new boolean[board.length+1];
         for (int r = (s / 3) * height; r < ((s / 3) + 1) * height; r++) {
             for (int c = (s % 3) * height; c < ((s % 3) + 1) * height; c++) {
-                print_matrix_color(board, orig, r, c); // remove me later
-                sleep(150); // remove me later
+                print_matrix_color(board, orig, Color.CYAN, r, c); // remove me later
                 char value = board[r][c];
                 if (value == '.') {
                     continue;
@@ -141,8 +140,7 @@ class Sudoku_Solver_question {
     private static boolean isValidColumn(char[][] board, int c) {
         boolean[] isPresent = new boolean[board.length+1];
         for (int i = 0; i < board.length; i++) {
-            print_matrix_color(board, orig, i, c); // remove me later
-            sleep(150); // remove me later
+            print_matrix_color(board, orig, Color.CYAN, i, c); // remove me later
             char value = board[i][c];
             if (value == '.') {
                 continue;
@@ -164,8 +162,7 @@ class Sudoku_Solver_question {
     private static boolean isValidRow(char[][] board, int r) {
         boolean[] isPresent = new boolean[board.length+1];
         for (int i = 0; i < board.length; i++) {
-            print_matrix_color(board, orig, r, i); // remove me later
-            sleep(150); // remove me later
+            print_matrix_color(board, orig, Color.CYAN, r, i); // remove me later
             char value = board[r][i];
             if (value == '.') {
                 continue;
@@ -197,7 +194,7 @@ class Sudoku_Solver_question {
             System.out.println(" ");
         }
     }
-    public static void print_matrix_color(char[][] board, char[][] orig, int index){
+    public static void print_matrix_color(char[][] board, char[][] orig, int index, Color color){
         int type = board.length;
         System.out.print(ansi().eraseScreen());
         for(int i = 0; i<type;i++){
@@ -208,7 +205,7 @@ class Sudoku_Solver_question {
                     System.out.print("  ");
                 Color bgColor = Color.DEFAULT;
                 if (i == getRowForIndex(index) && j == getColumnForIndex(index)) {
-                    bgColor = YELLOW;
+                    bgColor = color;
                 }
                 if (orig[i][j] == '.') {
                     System.out.print(ansi().fg(RED).bg(bgColor).a(board[i][j]).bgDefault().fgDefault().a(" "));
@@ -218,8 +215,9 @@ class Sudoku_Solver_question {
             }
             System.out.print("\n");
         }
+        sleep(150);
     }
-    public static void print_matrix_color(char[][] board, char[][] orig, int row, int col){
+    public static void print_matrix_color(char[][] board, char[][] orig, Color color, int row, int col){
         int type = board.length;
         System.out.print(ansi().eraseScreen());
         for(int i = 0; i<type;i++){
@@ -230,7 +228,7 @@ class Sudoku_Solver_question {
                     System.out.print("  ");
                 Color bgColor = Color.DEFAULT;
                 if (i == row && j == col) {
-                    bgColor = Color.CYAN;
+                    bgColor = color;
                 }
                 if (orig[i][j] == '.') {
                     System.out.print(ansi().fg(RED).bg(bgColor).a(board[i][j]).bgDefault().fgDefault().a(" "));
@@ -240,6 +238,7 @@ class Sudoku_Solver_question {
             }
             System.out.print("\n");
         }
+        sleep(150);
     }
 
     /**
