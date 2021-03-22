@@ -1,11 +1,6 @@
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
-
-import org.fusesource.jansi.AnsiConsole;
-import static org.fusesource.jansi.Ansi.*;
-import static org.fusesource.jansi.Ansi.Color.*;
-
 class Sudoku_Solver_question {
     public static int type = 0;
     public static int height = 0;
@@ -31,38 +26,34 @@ class Sudoku_Solver_question {
     }
 
     public static boolean BFS(char[][] board) {
-        // TODO write BFS search algorithm
-        // for (int i = 0; i < board.length * board.length; i++) {
-        // print_matrix_color(board, orig, i);
-        // sleep(300);
-        // }
 
-        for (int i = 0; i <= 8; i++) { 
-            for (int j = 0; j <= 8; j++) {
-                if (board[i][j] == '.')
-                    for (int num = 1; num <= 9; num++) {
+        for (int i = 0; i <= board.length - 1; i++) {
+            for (int j = 0; j <= board.length - 1; j++) {
+                if (board[i][j] == '.') {
+                    for (int num = 1; num <= board.length; num++) {
                         board[i][j] = intToChar(num); // assign a new value to the spot of the 2d array
-                        print_matrix_color(board, orig, Color.MAGENTA, i, j); // remove me later
-                        if (isValidSquare(board, j/3) == true && isValidColumn(board, j) == true
-                                && isValidRow(board, i) == true) { //check if new value works in that spot
-                            System.out.println("ayyy valid!");
-                            BFS(board);
-                        } else {
-                            System.out.println("not valid");
+                        if (isValidSquare(board, i, j) == true && isValidColumn(board, j) == true
+                                && isValidRow(board, i) == true) { // check if new value works in that spot
+
+                            if (BFS(board)) {
+                                return true;
+                            } else {
+                                board[i][j] = '.';
+                            }
                         }
-                        sleep(600);
                     }
+                    board[i][j] = '.';
+                    return false;
+
+                }
             }
-
         }
-
-        return false;
-
+        return true;
     }
 
     /**
      * Converts a number eg 1 or 9 to a char eg '1', '9'
-     * 
+     *
      * @param num number to convert
      * @return the char
      */
@@ -115,15 +106,16 @@ class Sudoku_Solver_question {
     }
 
     /**
-     * Parameters: Board & box index number returns: true / false Validates the box,
+     * Parameters: Board and spot on board being checked. Returns: true / false Validates the box,
      * returns true if there is no duplicate number in the box else false
      */
-    private static boolean isValidSquare(char[][] board, int s) {
+    private static boolean isValidSquare(char[][] board, int row, int col) {
+        row = (row / (board.length / 3) * (board.length / 3));
+        col = (col / 3) * 3;
         boolean[] isPresent = new boolean[board.length + 1];
-        for (int r = (s / 3) * height; r < ((s / 3) + 1) * height; r++) {
-            for (int c = (s % 3) * height; c < ((s % 3) + 1) * height; c++) {
-                print_matrix_color(board, orig, Color.CYAN, r, c); // remove me later
-                char value = board[r][c];
+        for (int r = 0; r < (board.length / 3); r++) {
+            for (int c = 0; c < 3; c++) {
+                char value = board[row + r][col + c];
                 if (value == '.') {
                     continue;
                 }
@@ -144,7 +136,6 @@ class Sudoku_Solver_question {
     private static boolean isValidColumn(char[][] board, int c) {
         boolean[] isPresent = new boolean[board.length + 1];
         for (int i = 0; i < board.length; i++) {
-            print_matrix_color(board, orig, Color.CYAN, i, c); // remove me later
             char value = board[i][c];
             if (value == '.') {
                 continue;
@@ -165,7 +156,6 @@ class Sudoku_Solver_question {
     private static boolean isValidRow(char[][] board, int r) {
         boolean[] isPresent = new boolean[board.length + 1];
         for (int i = 0; i < board.length; i++) {
-            print_matrix_color(board, orig, Color.CYAN, r, i); // remove me later
             char value = board[r][i];
             if (value == '.') {
                 continue;
@@ -196,59 +186,10 @@ class Sudoku_Solver_question {
         }
     }
 
-    public static void print_matrix_color(char[][] board, char[][] orig, int index, Color color) {
-        int type = board.length;
-        System.out.print(ansi().eraseScreen());
-        for (int i = 0; i < type; i++) {
-            if (i % (type / 3) == 0 && i > 0)
-                System.out.print("\n");
-            for (int j = 0; j < type; j++) {
-                if (j % 3 == 0 && j > 0)
-                    System.out.print("  ");
-                Color bgColor = Color.DEFAULT;
-                if (i == getRowForIndex(index) && j == getColumnForIndex(index)) {
-                    bgColor = color;
-                }
-                if (orig[i][j] == '.') {
-                    System.out.print(ansi().fg(RED).bg(bgColor).a(board[i][j]).bgDefault().fgDefault().a(" "));
-                } else {
-                    System.out.print(ansi().fgDefault().bg(bgColor).a(board[i][j]).bgDefault().fgDefault().a(" "));
-                }
-            }
-            System.out.print("\n");
-        }
-        sleep(150);
-    }
-
-    public static void print_matrix_color(char[][] board, char[][] orig, Color color, int row, int col) {
-        int type = board.length;
-        System.out.print(ansi().eraseScreen());
-        for (int i = 0; i < type; i++) {
-            if (i % (type / 3) == 0 && i > 0)
-                System.out.print("\n");
-            for (int j = 0; j < type; j++) {
-                if (j % 3 == 0 && j > 0)
-                    System.out.print("  ");
-                Color bgColor = Color.DEFAULT;
-                if (i == row && j == col) {
-                    bgColor = color;
-                }
-                if (orig[i][j] == '.') {
-                    System.out.print(ansi().fg(RED).bg(bgColor).a(board[i][j]).bgDefault().fgDefault().a(" "));
-                } else {
-                    System.out.print(ansi().fgDefault().bg(bgColor).a(board[i][j]).bgDefault().fgDefault().a(" "));
-                }
-            }
-            System.out.print("\n");
-        }
-        sleep(150);
-    }
-
     /**
      * Start of the program main function
      */
     public static void main(String args[]) {
-        AnsiConsole.systemInstall();
         // 6x6 sudoku board
         char[][] board_6x6 = { { '.', '.', '.', '.', '4', '.' }, { '5', '6', '.', '.', '.', '.' },
 
@@ -265,8 +206,7 @@ class Sudoku_Solver_question {
         System.out.println("Problem board is: ");
         print_matrix(board_6x6);
         // Solve the problem board using BFS
-        // boolean status = BFS(board_6x6); // todo: uncomment
-        boolean status = false;
+        boolean status = BFS(board_6x6);
         // based on the status print the solution
         if (status) {
             System.out.println("\n BFS - Solution board is: ");
